@@ -526,6 +526,7 @@ CRenderTarget::CRenderTarget()
 
 		rt_Back_Buffer_AA.create(r2_RT_backbuffer_AA, get_target_width(), get_target_height(), DxgiFormat::DXGI_FORMAT_R8G8B8A8_UNORM, 1);
 		rt_Back_Buffer.create(r2_RT_backbuffer_final, get_target_width(), get_target_height(), DxgiFormat::DXGI_FORMAT_R8G8B8A8_UNORM, 1);
+		rt_secondVP.create(r2_RT_secondVP, get_target_width(), get_target_height(), DxgiFormat::DXGI_FORMAT_R8G8B8A8_UNORM, 1);
 
 		rt_Generic.create(r2_RT_generic, get_target_width(), get_target_height(), DxgiFormat::DXGI_FORMAT_R16G16B16A16_FLOAT, 1, RFeatureLevel >= D3D_FEATURE_LEVEL_11_0);
 	}

@@ -911,7 +911,11 @@ void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual, bool ignore)
 			FHierrarhyVisual* pV = (FHierrarhyVisual*)pVisual;
 			I = pV->children.begin	();
 			E = pV->children.end	();
-			for (; I!=E; I++)	add_leafs_Dynamic	(*I, ignore);
+			for (; I!=E; I++)
+			{
+				(*I)->vis.obj_data = pV->getVisData().obj_data;
+				add_leafs_Dynamic	(*I, ignore);
+			}
 		}
 		return;
 	case MT_SKELETON_ANIM:
@@ -935,7 +939,11 @@ void CRender::add_leafs_Dynamic	(dxRender_Visual *pVisual, bool ignore)
 				pV->CalculateWallmarks		();		//. bug?
 				I = pV->children.begin		();
 				E = pV->children.end		();
-				for (; I!=E; I++)	add_leafs_Dynamic	(*I, ignore);
+				for (; I != E; I++)
+				{
+					(*I)->vis.obj_data = pV->getVisData().obj_data;
+					add_leafs_Dynamic(*I, ignore);
+				}
 			}
 		}
 		return;
@@ -981,7 +989,11 @@ void CRender::add_leafs_Static(dxRender_Visual *pVisual)
 			FHierrarhyVisual* pV	= (FHierrarhyVisual*)pVisual;
 			I = pV->children.begin	();
 			E = pV->children.end	();
-			for (; I!=E; I++)		add_leafs_Static (*I);
+			for (; I != E; I++)
+			{
+				(*I)->vis.obj_data = pV->getVisData().obj_data;
+				add_leafs_Static(*I);
+			}
 		}
 		return;
 	case MT_SKELETON_ANIM:
@@ -992,7 +1004,11 @@ void CRender::add_leafs_Static(dxRender_Visual *pVisual)
 			pV->CalculateBones		(TRUE);
 			I = pV->children.begin	();
 			E = pV->children.end	();
-			for (; I!=E; I++)		add_leafs_Static	(*I);
+			for (; I != E; I++)
+			{
+				(*I)->vis.obj_data = pV->getVisData().obj_data;
+				add_leafs_Static(*I);
+			}
 		}
 		return;
 	case MT_LOD:

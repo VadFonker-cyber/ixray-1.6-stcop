@@ -454,6 +454,10 @@ CRenderDevice::CRenderDevice() :
 	b_is_Ready = FALSE;
 	Timer.Start();
 	m_bNearer = FALSE;
+
+	m_SecondViewport.SetSVPActive(false);
+	m_SecondViewport.SetSVPFrameDelay(2);
+	m_SecondViewport.isCamReady = false;
 #endif
 };
 
@@ -595,3 +599,15 @@ void CRenderDevice::time_factor(const float& time_factor) {
 	psSoundTimeFactor = time_factor; //--#SM+#--
 }
 #endif
+
+void CRenderDevice::CSecondVPParams::SetSVPActive(bool bState) //--#SM+#-- +SecondVP+
+{
+	isActive = bState;
+	if (g_pGamePersistent != NULL)
+		g_pGamePersistent->m_pGShaderConstants->m_blender_mode.z = (isActive ? 1.0f : 0.0f);
+}
+
+bool CRenderDevice::CSecondVPParams::IsSVPFrame() //--#SM+#-- +SecondVP+
+{
+	return IsSVPActive() && Device.dwFrame % frameDelay == 0;
+}

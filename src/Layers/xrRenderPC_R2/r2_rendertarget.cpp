@@ -352,6 +352,9 @@ CRenderTarget::CRenderTarget		()
 		s_ssao.create				(b_ssao, "r2\\ssao");
 	}
 
+	// SecondWP
+	rt_secondVP.create(r2_RT_secondVP, w, h, D3DFMT_A8R8G8B8);
+
 	//FXAA
 	s_fxaa.create(b_fxaa, "r2\\fxaa");
 	g_fxaa.create(FVF::F_V, RCache.Vertex.Buffer(), RCache.QuadIB);
