@@ -2111,6 +2111,26 @@ public:
     }
 };
 
+class CCC_SetGameTime : public IConsole_Command {
+public:
+	CCC_SetGameTime(LPCSTR N) : IConsole_Command(N) {};
+	virtual void	Execute(LPCSTR args) {
+		u32 new_hours = 0, new_mins = 0;
+		sscanf(args, "%d:%d", &new_hours, &new_mins);
+
+		if (new_hours > 24 || new_mins > 60)
+		{
+			return;
+		}
+
+		u32 year = 1, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
+		split_time(Level().GetGameTime(), year, month, day, hours, mins, secs, milisecs);
+		u64 new_time = generate_time(year, month, day, new_hours, new_mins, secs, milisecs);
+
+		Level().SetGameTime(new_time, true);
+	}
+};
+
 void CCC_RegisterCommands()
 {
 	// options
@@ -2118,6 +2138,7 @@ void CCC_RegisterCommands()
 
 #ifndef MASTER_GOLD
 	CMD1(CCC_SetWeather, "set_weather");
+	CMD1(CCC_SetGameTime, "set_time");
 	CMD1(CCC_ReceiveInfo, "g_info");
 	CMD1(CCC_DisableInfo, "d_info");
 	CMD1(CCC_GiveMoney, "g_money");

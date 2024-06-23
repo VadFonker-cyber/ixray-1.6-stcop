@@ -65,6 +65,11 @@
 #	include "debug_text_tree.h"
 #endif
 
+#include "game_sv_single.h"
+#include "game_cl_single.h"
+#include "alife_simulator.h"
+#include "alife_time_manager.h"
+
 ENGINE_API bool g_dedicated_server;
 
 //extern BOOL	g_bDebugDumpPhysicsStep;
@@ -1161,6 +1166,42 @@ bool CLevel::IsServer ()
 	if (!Server || IsDemoPlayStarted()) return false;
 	//return (Server->GetClientsCount() != 0);
 	return true;
+}
+
+void CLevel::SetGameTime(u64 new_time, bool updateWeather)
+{
+	float timeFactor = Level().GetGameTimeFactor();
+	game_sv_Single* tpGame = smart_cast<game_sv_Single*>(Level().Server->game);
+
+	if (tpGame && ai().get_alife())
+	{
+		auto& env = g_pGamePersistent->Environment();
+		
+		env.SetGameTime(new_time, timeFactor);
+		game->SetEnvironmentGameTimeFactor(new_time, timeFactor);
+		game->SetGameTimeFactor(new_time, timeFactor);
+		tpGame->alife().time_manager().set_game_time(new_time, timeFactor);
+
+		// HACK: Обновляем погоду принудительно. Есть проблема в обновление секции погоды: сбивается current_time и ambient
+		if (updateWeather)
+		{
+			g_pGamePersistent->Environment().SetWeather(env.CurrentWeatherName, IsGameTypeSingle());
+		}
+	}
+}
+
+void CLevel::SetGameTime(u32 new_hours, u32 new_mins, bool updateWeather) {
+
+	if (new_hours > 24 || new_mins > 60)
+	{
+		return;
+	}
+
+	u32 year = 1, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
+	split_time(Level().GetGameTime(), year, month, day, hours, mins, secs, milisecs);
+	u64 new_time = generate_time(year, month, day, new_hours, new_mins, secs, milisecs);
+
+	SetGameTime(new_time, updateWeather);
 }
 
 bool CLevel::IsClient ()

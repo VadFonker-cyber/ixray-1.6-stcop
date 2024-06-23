@@ -354,6 +354,9 @@ public:
 	virtual void		SetEnvironmentTimeFactor(const float fTimeFactor) override;
 	virtual u64			GetEnvironmentGameTime() const override;
 
+	virtual void		SetGameTime(u64 newTime, bool updateWeather = true) override;
+	virtual void		SetGameTime(u32 newHours, u32 newMinutes, bool updateWeather = true) override;
+
 protected:
 //	CFogOfWarMngr*		m_pFogOfWarMngr;
 protected:	

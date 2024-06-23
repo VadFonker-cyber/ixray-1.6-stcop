@@ -119,6 +119,8 @@ public:
 	virtual float				GetEnvironmentTimeFactor() const = 0;
 	virtual void				SetEnvironmentTimeFactor(const float fTimeFactor) = 0;
 	virtual u64					GetEnvironmentGameTime() const = 0;
+	virtual void				SetGameTime(u64 newTime, bool updateWeather) = 0;
+	virtual void				SetGameTime(u32 newHours, u32 newMinutes, bool updateWeather) = 0;
 
 	virtual	void				SpawnItem(LPCSTR section, const Fvector& position, u32 level_vertex_id, u16 parent_id) = 0;
 	virtual IGame_Patrol*		CreatePatrol(const char* patrol) = 0;
