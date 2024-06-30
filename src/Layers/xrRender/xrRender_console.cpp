@@ -231,7 +231,7 @@ float		ps_r3_dyn_wet_surf_near		= 10.f;				// 10.0f
 float		ps_r3_dyn_wet_surf_far		= 30.f;				// 30.0f
 int			ps_r3_dyn_wet_surf_sm_res	= 256;				// 256
 
-float		ps_r4_cas_sharpening = 0.8f;
+float		ps_r4_cas_sharpening = 0.0f;
 
 // Test float exported to shaders for development
 float		ps_r__test_exp_to_shaders_1	= 1.0f;
