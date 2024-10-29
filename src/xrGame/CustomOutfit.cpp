@@ -65,7 +65,7 @@ void CCustomOutfit::OnH_A_Chield()
 void CCustomOutfit::Load(LPCSTR section) 
 {
 	inherited::Load(section);
-	isDisableChangeSkin = READ_IF_EXISTS(pSettings, r_bool, section, "forbid_change_skin", true);
+	isDisableChangeSkin = READ_IF_EXISTS(pSettings, r_bool, section, "forbid_change_skin", false);
 
 	m_HitTypeProtection[ALife::eHitTypeBurn]		= pSettings->r_float(section,"burn_protection");
 	m_HitTypeProtection[ALife::eHitTypeStrike]		= pSettings->r_float(section,"strike_protection");
