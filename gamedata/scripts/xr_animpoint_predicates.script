@@ -252,6 +252,7 @@ associations = {
 	walker_camp		  = {	{name = "play_guitar", predicate = xr_animpoint_predicates.animpoint_predicate_guitar},
 							{name = "play_harmonica", predicate = xr_animpoint_predicates.animpoint_predicate_harmonica}
 						},
+	-- START IX-Ray					
 	kamp			  = {
 							{name = "kamp", predicate = xr_animpoint_predicates.const_predicate_true},
 							{name = "kamp_eat_bread", predicate = xr_animpoint_predicates.animpoint_predicate_bread},
@@ -261,4 +262,5 @@ associations = {
 							{name = "kamp_guitar", predicate = xr_animpoint_predicates.animpoint_predicate_guitar},
 							{name = "kamp_harmonica", predicate = xr_animpoint_predicates.animpoint_predicate_harmonica},
 						},
+	-- END IX-Ray
 }

@@ -406,7 +406,8 @@ states = {
 				animstate = nil,
 				animation = "sleeping"
 			},
-			sleep_sit = {	weapon = "strapped",
+	-- START IX-Ray
+	sleep_sit = {	weapon = "strapped",
 			movement = move.stand,
 			mental = anim.free,
 			bodystate = move.standing,
@@ -456,6 +457,7 @@ states = {
 				animstate = "sit_ass",
 				animation = "harmonica"
 			},
+	-- END IX-Ray
 	hello = {	weapon = "strapped",
 				movement = move.stand,
 				mental = anim.free,

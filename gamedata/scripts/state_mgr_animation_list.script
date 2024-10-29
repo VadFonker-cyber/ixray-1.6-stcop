@@ -360,7 +360,7 @@ animations = {
 						out		= { [0]	= {"wounded_to_idle_0"}},
 						idle	= { [0]	= "wounded_idle_0" },
 						rnd		= {	[0]	= {	"wounded_idle_1" }}},
-
+-- START IX-Ray
 		eat_bread	= {	prop	= { maxidle = 3,
 					sumidle = 3,
 					rnd = 80 },
@@ -410,7 +410,7 @@ animations = {
 					idle	= { [0]	= "harmonica_0" },
 	--	rnd		= { [0]	= {	"harmonica_2","harmonica_3" } }
 		},
-
+-- END IX-Ray
 		choosing	= {	prop	= { maxidle = 8,
 									sumidle = 10,
 									rnd = 80 },

@@ -185,6 +185,7 @@ function load_job(smart)
 				end
 				if it > 1 then table.insert(stalker_jobs.jobs, stalker_surge) end
 				
+				-- START IX-Ray
 				--'------------------------------------------------------------------------
 				--'                         kamp
 				--'------------------------------------------------------------------------
@@ -243,7 +244,8 @@ function load_job(smart)
 						it = it + 1
 				end
 				if it > 1 then table.insert(stalker_jobs.jobs, stalker_kamp) end
-
+				-- END IX-Ray
+				
 				--'------------------------------------------------------------------------
 				--'                         SLEEP
 				--'------------------------------------------------------------------------
