@@ -50,7 +50,7 @@ void UIRenderForm::DrawStatistics()
 		};
 
 	ImGui::SetCursorPos(ImVec2(48, 48));
-	ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4.0f, 2.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(4.0f, .5f));
 
 	if (!ImGui::BeginTable("stats", 2))
 	{
@@ -96,7 +96,6 @@ void UIRenderForm::DrawStatistics()
 	ImGui::EndTable();
 	ImGui::PopStyleVar();
 }
-
 void UIRenderForm::Draw()
 {
 	if (!ImGui::Begin(ViewportName, nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
@@ -202,29 +201,17 @@ void UIRenderForm::Draw()
 			//Statistic
 			DrawStatistics();
 
-			//AXIS
-			ImGuizmo::SetRect(canvas_pos.x, canvas_pos.y, canvas_size.x, canvas_size.y);
-			ImGuizmo::SetDrawlist();
-			ImGuizmo::AllowAxisFlip(false);
+			if (!psDeviceFlags.test(rsDrawAxis) && !psDeviceFlags.test(rsDisableAxisCube))
+			{
+				ImGuizmo::SetRect(canvas_pos.x, canvas_pos.y, canvas_size.x, canvas_size.y);
+				ImGuizmo::SetDrawlist();
+				ImGuizmo::AllowAxisFlip(true);
+				ImVec2 size = { 150, 150 };
+				ImVec2 pos = { canvas_pos.x, canvas_pos.y + canvas_size.y - size.y };
 
-			Fmatrix	M = Fidentity;
-			Fmatrix	S;
-			S.scale(0.04f, 0.04f, 0.04f);
-			M.mulB_44(S);
-
-			Fvector dir;
-			Ivector2 pt;
-
-			static int _wh = 80;
-			static float _kl = 1.0f;
-
-			pt.x = _wh;
-			pt.y = iFloor(UI->GetRenderHeight() - _wh);
-
-			UI->CurrentView().m_Camera.MouseRayFromPoint(M.c, dir, pt);
-			M.c.mad(dir, _kl);
-
-			ImGuizmo::Manipulate((float*)&Device.mView, (float*)&Device.mProject.m, ImGuizmo::TRANSLATE, ImGuizmo::WORLD, (float*)&M);
+				//Device.mView for only read
+				ImGuizmo::ViewManipulate((float*)&Device.mView, 10, pos, size, ImColor());
+			}
 		}
 
 		ImGui::SetCursorScreenPos(canvas_pos);
