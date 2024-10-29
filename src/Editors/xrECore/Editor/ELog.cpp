@@ -146,11 +146,11 @@ inline TMsgDlgButtons MessageDlg(const char*text, TMsgDlgType mt, int btn)
 	{
 		SDL_ShowMessageBox(&messageboxYes, &buttonid);
 	}
-	if (btn == mbOK)
+	else if (btn == mbOK)
 	{
 		SDL_ShowMessageBox(&messageboxOk, &buttonid);
 	}
-	if (btn == (mbOK | mbSkip))
+	else if (btn == (mbOK | mbSkip))
 	{
 		SDL_ShowMessageBox(&messageboxOkSkip, &buttonid);
 	}

@@ -449,6 +449,31 @@ bool CWayObject::FrustumSelect(int flag, const CFrustum& frustum)
     }else 	return inherited::FrustumSelect(flag,frustum);
 }
 
+Fmatrix CWayObject::GetTransform() const
+{
+    if (IsPointMode())
+    {
+        Fmatrix Result = FTransform;
+        int SelectCount = 0;
+
+        for (CWayPoint* Point : m_WayPoints)
+        {
+            if (Point->m_bSelected)
+            {
+                SelectCount++;
+                Result.c = Point->m_vPosition;
+            }
+
+            if (SelectCount > 1)
+                return FTransform;
+        }
+
+        return Result;
+    }
+
+    return FTransform;
+}
+
 bool CWayObject::GetBox( Fbox& box ) 
 {
 	box.invalidate();
