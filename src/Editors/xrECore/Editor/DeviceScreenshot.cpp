@@ -15,7 +15,7 @@ bool CEditorRenderDevice::MakeScreenshot(U32Vec& pixels, u32 width, u32 height)
     Resources->Evict();
 
     IDirect3DSurface9* 	poldZB=0;
-    IDirect3DSurface9* 	pZB=0;
+   // IDirect3DSurface9* 	pZB=0;
     IDirect3DSurface9* 	pRT=0;
     IDirect3DSurface9* 	poldRT=0;
     D3DVIEWPORT9		oldViewport;
@@ -25,9 +25,9 @@ bool CEditorRenderDevice::MakeScreenshot(U32Vec& pixels, u32 width, u32 height)
     CHK_DX(REDevice->GetViewport(&oldViewport));
 
 	CHK_DX(REDevice->CreateRenderTarget(width,height,D3DFMT_A8R8G8B8,D3DMULTISAMPLE_NONE,0,FALSE,&pRT,0));
-	CHK_DX(REDevice->CreateDepthStencilSurface(width,height,Caps.bStencil?D3DFMT_D24S8:D3DFMT_D24X8,D3DMULTISAMPLE_NONE,0,FALSE,&pZB,0));
+	//CHK_DX(REDevice->CreateDepthStencilSurface(width,height,Caps.bStencil?D3DFMT_D24S8:D3DFMT_D24X8,D3DMULTISAMPLE_NONE,0,FALSE,&pZB,0));
 	CHK_DX(REDevice->SetRenderTarget(0,pRT));
-	CHK_DX(REDevice->SetDepthStencilSurface(pZB));
+	//CHK_DX(REDevice->SetDepthStencilSurface(pZB));
 
 	UI->PrepareRedraw	();
     EDevice->Begin		();
@@ -58,7 +58,7 @@ bool CEditorRenderDevice::MakeScreenshot(U32Vec& pixels, u32 width, u32 height)
     CHK_DX(REDevice->SetRenderTarget(0,poldRT));
     CHK_DX(REDevice->SetViewport(&oldViewport));
 
-    _RELEASE(pZB);
+    //_RELEASE(pZB);
     _RELEASE(poldZB);
     _RELEASE(pFB);
     _RELEASE(pRT);

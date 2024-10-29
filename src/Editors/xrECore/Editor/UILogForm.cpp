@@ -86,6 +86,10 @@ void UILogForm::Update()
 
 				ImVec4 Color = { 1,1,1,1 };
 				const char* Str = GetList()->at(i).c_str();
+
+				if (Str == nullptr || xr_strlen(Str) == 0)
+					continue;
+
 				if (m_Filter[0] && strstr(Str, m_Filter)==0)
 				{
 					continue;
