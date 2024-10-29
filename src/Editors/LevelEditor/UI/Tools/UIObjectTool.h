@@ -27,6 +27,7 @@ private:
 	float m_selPercent;
 	bool m_Selection;
 
+	xr_string RAIFile;
 private:
 	ref_texture m_TextureNull;
 	ImTextureID m_RealTexture;

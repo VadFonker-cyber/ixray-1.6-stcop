@@ -15,13 +15,13 @@ protected:
     	flAppendRandomScale				= (1<<30),
     	flAppendRandomRotation			= (1<<31),
     };
-    Flags32				m_Flags;
 	bool 				ExportBreakableObjects	(SExportStreams* F);
 	bool 				ExportClimableObjects	(SExportStreams* F);
 
     void 				OnChangeAppendRandomFlags(PropValue* prop);
 
 public:
+    Flags32				m_Flags;
     Fvector				m_AppendRandomMinScale;
     Fvector				m_AppendRandomMaxScale;
     Fvector				m_AppendRandomMinRotation;
