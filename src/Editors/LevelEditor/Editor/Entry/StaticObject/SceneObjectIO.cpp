@@ -38,9 +38,16 @@ bool CSceneObject::LoadLTX(CInifile& ini, LPCSTR sect_name)
                 }
             }
 
-            if(!bRes)
+            if(!bRes && !Scene->isSkipCantFindDialog())
             {
-                ELog.DlgMsg(mtError, "CSceneObject: '%s' not found in library", ref_name.data());
+                if (ELog.DlgMsg(mtSkip, "CSceneObject: '%s' not found in library", ref_name.data()) == 2)
+                {
+                    Scene->setSkipCantFindDialog(true);
+                }
+            }
+            else 
+            {
+                Msg("! CSceneObject: '%s' not found in library", ref_name.data());
             }
 
             Scene->Modified();

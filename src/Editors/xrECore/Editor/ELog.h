@@ -10,6 +10,7 @@ enum TMsgDlgType
 	mtError =1,
 	mtInformation = 2,
 	mtConfirmation = 4,
+	mtSkip = 8,
 
 };
 enum TMsgDlgButtons
@@ -18,11 +19,13 @@ enum TMsgDlgButtons
 	mbNo=2,
 	mbCancel=4,
 	mbOK = 8,
+	mbSkip = 16,
 	mrNone = 0,
 	mrYes,
 	mrNo,
 	mrCancel,
 	mrOK,
+	mrSkip,
 };
 class ECORE_API CLog{
 public:

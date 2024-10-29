@@ -64,7 +64,11 @@ inline TMsgDlgButtons MessageDlg(const char*text, TMsgDlgType mt, int btn)
 	{
 		{ 0, 0, "OK" },
 	};
-
+	const SDL_MessageBoxButtonData btnOkSkip[] =
+	{
+		{ 0, 0, "OK" },
+		{ 0, 1, "Skip All" },
+	};
 	const SDL_MessageBoxButtonData btnYes[] =
 	{
 		{ 0, 0, "OK" },
@@ -104,7 +108,16 @@ inline TMsgDlgButtons MessageDlg(const char*text, TMsgDlgType mt, int btn)
 		btnOk,					/* .buttons */
 		nullptr						/* .colorScheme */
 	};
-
+	const SDL_MessageBoxData messageboxOkSkip =
+	{
+		Flags, /* .flags */
+		nullptr,						/* .window */
+		Title,						/* .title */
+		text,						/* .message */
+		SDL_arraysize(btnOkSkip),		/* .numbuttons */
+		btnOkSkip,					/* .buttons */
+		nullptr						/* .colorScheme */
+	};
 	const SDL_MessageBoxData messageboxYesNo =
 	{
 		(u32)Flags, /* .flags */
@@ -136,6 +149,10 @@ inline TMsgDlgButtons MessageDlg(const char*text, TMsgDlgType mt, int btn)
 	if (btn == mbOK)
 	{
 		SDL_ShowMessageBox(&messageboxOk, &buttonid);
+	}
+	if (btn == (mbOK | mbSkip))
+	{
+		SDL_ShowMessageBox(&messageboxOkSkip, &buttonid);
 	}
 	else if (btn == (mbYes | mbNo))
 	{
@@ -171,6 +188,9 @@ inline TMsgDlgButtons MessageDlg(const char*text, TMsgDlgType mt, int btn)
 		{
 		case 0:
 			return mrOK;
+			break;
+		case 1:
+			return mrSkip;
 			break;
 		}
 	}
@@ -244,6 +264,7 @@ int CLog::DlgMsg (TMsgDlgType mt, LPCSTR _Format, ...)
     ExecCommand(COMMAND_RENDER_FOCUS);
 
     if (mtConfirmation==mt)	res=MessageDlg(buf, mt,  mbYes | mbNo | mbCancel);
+	if (mtSkip == mt)	res = MessageDlg(buf, mtConfirmation, mbOK | mbSkip);
     else                   	res=MessageDlg(buf, mt,  mbOK);
 
     if (mtConfirmation==mt){

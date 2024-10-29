@@ -1088,6 +1088,12 @@ bool CContentView::DrawFormContext()
 	}
 	ImGui::EndDisabled();
 
+	ImGui::Separator();
+
+	if (ImGui::MenuItem("Create Folder"))
+	{
+		CreateAction();
+	}
 	ImGui::EndPopup();
 	return true;
 }
@@ -1406,16 +1412,17 @@ xr_map<xr_string, CContentView::FileOptData> CContentView::ScanConfigs(const xr_
 
 #pragma region ObjectActions
 
-void CContentView::CheckFileNameCopyRecursive(xr_path& FilePath) const
+void CContentView::CheckFileNameRecursive(xr_path& FilePath, const xr_string& postfix) const
 {
 	xr_path NewFileName = FilePath.stem();
-	NewFileName += " - Copy";
+	NewFileName += " - ";
+	NewFileName += postfix.c_str();
 	NewFileName += FilePath.extension();
 
 	FilePath.replace_filename(NewFileName);
 	if (std::filesystem::exists(FilePath))
 	{
-		CheckFileNameCopyRecursive(FilePath);
+		CheckFileNameRecursive(FilePath, postfix);
 	}
 
 	return;
@@ -1427,7 +1434,7 @@ void CContentView::PasteAction(const xr_string& Path) /*const*/
 
 	if (CopyObjectPath == OutDir || std::filesystem::exists(OutDir))
 	{
-		CheckFileNameCopyRecursive(OutDir);
+		CheckFileNameRecursive(OutDir, "Copy");
 	}
 
 	if (std::filesystem::is_directory(CopyObjectPath))
@@ -1438,7 +1445,8 @@ void CContentView::PasteAction(const xr_string& Path) /*const*/
 	{
 		std::filesystem::copy(CopyObjectPath, OutDir);
 
-		if (auto ThmFile = CopyObjectPath; ThmFile.extension() != ".thm" && std::filesystem::exists(ThmFile.replace_extension(".thm")))
+		if (auto ThmFile = CopyObjectPath; ShouldTheFileHaveTHM(CopyObjectPath) && 
+			ThmFile.extension() != ".thm" && std::filesystem::exists(ThmFile.replace_extension(".thm")))
 		{
 			std::filesystem::copy(ThmFile, OutDir.replace_extension(".thm"));
 		}
@@ -1464,7 +1472,8 @@ void CContentView::DeleteAction(const xr_path& Path) /*const*/
 	{
 		std::filesystem::remove(Path);
 
-		if (auto ThmFile = Path; Path.extension() != ".thm" && std::filesystem::exists(ThmFile.replace_extension(".thm")))
+		if (auto ThmFile = Path; ShouldTheFileHaveTHM(Path) && 
+			Path.extension() != ".thm" && std::filesystem::exists(ThmFile.replace_extension(".thm")))
 		{
 			std::filesystem::remove(ThmFile);
 		}
@@ -1500,12 +1509,12 @@ void CContentView::RenameAction(const xr_path& FilePath, const xr_string NewName
 
 	if (std::filesystem::exists(NewFileName))
 	{
-		CheckFileNameCopyRecursive(NewFileName);
+		CheckFileNameRecursive(NewFileName, "Copy");
 	}
 
 	std::filesystem::rename(TempFileName, NewFileName);
 
-	if (!std::filesystem::is_directory(NewFileName))
+	if (!std::filesystem::is_directory(NewFileName) && ShouldTheFileHaveTHM(FilePath))
 	{
 		if (auto ThmFile = FilePath; ThmFile.extension() != ".thm" && std::filesystem::exists(ThmFile.replace_extension(".thm")))
 		{
@@ -1531,5 +1540,35 @@ void CContentView::RenameActionEnd()
 	RenameObject.Active = false;
 	RenameObject.RenameBuf.clear();
 	RenameObject.Path.clear();
+}
+
+bool CContentView::ShouldTheFileHaveTHM(const xr_path& file) const
+{
+	if (!file.has_extension())
+		return false;
+
+	if (auto e = file.extension();
+		e == ".group" || e == ".object" || e == ".dds" || e == ".tga")
+		return true;
+
+	return (false);
+}
+
+void CContentView::CreateAction() /*const*/
+{
+	xr_path OutDir = CurrentDir / xr_path("Folder");
+
+	if (std::filesystem::exists(OutDir))
+	{
+		CheckFileNameRecursive(OutDir, "New");
+	}
+
+	std::filesystem::create_directory(OutDir);
+
+	RenameActionActivate(OutDir);
+
+	// For some reason, FS does not want to register that the file has been deleted. \
+				Temporarily removed the "const" and made the Rescan Directory();
+	RescanDirectory();
 }
 #pragma endregion

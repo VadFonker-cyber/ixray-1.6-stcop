@@ -817,6 +817,7 @@ bool EScene::LoadLTX(LPCSTR map_name, bool bUndo)
 
 		SceneToolsMapPairIt _I 	= m_SceneTools.begin();
 		SceneToolsMapPairIt _E 	= m_SceneTools.end();
+		Scene->setSkipCantFindDialog(false);
 		for (; _I!=_E; ++_I)
 		{
 			if (_I->second)

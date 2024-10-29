@@ -105,6 +105,7 @@ public:
 	st_LevelOptions	m_LevelOp;
 protected:
 	bool m_Valid;
+	bool m_SkipCantFindDialog;
 	int m_Locked;
 	// version control 
 	xrGUID			m_GUID;
@@ -121,7 +122,7 @@ protected:
 
 	TProperties* m_SummaryInfo;
 
-	ObjectList		m_ESO_SnapObjects; // временно здесь а вообще нужно перенести в ESceneTools
+	ObjectList		m_ESO_SnapObjects; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ ESceneTools
 protected:
 	bool 			OnLoadAppendObject(CCustomObject* O);
 	bool 			OnLoadSelectionAppendObject(CCustomObject* O);
@@ -195,6 +196,8 @@ public:
 
 	int				MultiRenameObjects();
 
+	bool			isSkipCantFindDialog() { return m_SkipCantFindDialog; }
+	void			setSkipCantFindDialog(bool b) { m_SkipCantFindDialog = b; }
 	IC bool 		valid() { return m_Valid; }
 
 	IC bool 		locked() { return m_Locked != 0; }

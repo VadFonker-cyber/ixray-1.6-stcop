@@ -79,7 +79,7 @@ private:
 
 	xr_map<xr_string, FileOptData> ScanConfigs(const xr_string& StartPath);
 	void ScanConfigsRecursive(xr_map<xr_string, CContentView::FileOptData>& TempPath, const xr_string& ParseStr);
-	void CheckFileNameCopyRecursive(xr_path&FilePath) const;
+	void CheckFileNameRecursive(xr_path&FilePath, const xr_string&) const;
 
 	bool CheckFile(const xr_path& File) const;
 
@@ -87,11 +87,13 @@ private:
 	void PasteAction(const xr_string&) /*const*/;
 	void DeleteAction(const xr_path&) /*const*/;
 	void CutAction(const xr_path&) const;
+	void CreateAction() /*const*/;
 	void RenameAction(const xr_path& FilePath,const xr_string NewName);
 
 	void RenameActionActivate(const xr_path& Path);
 	void RenameActionEnd();
 
+	bool ShouldTheFileHaveTHM(const xr_path&) const;
 
 	void AcceptDragDropAction(xr_path&);
 	bool BeginDragDropAction(xr_path&, xr_string&, const CContentView::FileOptData&, CContentView::IconData*);
