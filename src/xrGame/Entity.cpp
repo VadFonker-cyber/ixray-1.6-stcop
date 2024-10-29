@@ -252,6 +252,8 @@ void CEntity::KillEntity(u16 whoID)
 			return;
 		}
 
+		Actor()->detach_Vehicle();
+		Actor()->use_MountedWeapon(NULL);
 		Actor()->callback(GameObject::eActorBeforeDeath)(whoID);
 	}
 
