@@ -180,4 +180,7 @@
     <string id="Ultra">
         <text>ultra</text>
     </string>
+    <string id="st_proc">
+        <text>%</text>
+    </string>
 </string_table>
