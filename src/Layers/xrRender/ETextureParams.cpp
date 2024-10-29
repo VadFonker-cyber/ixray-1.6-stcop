@@ -186,6 +186,7 @@ void STextureParams::OnTypeChange(PropValue* prop)
 void STextureParams::FillProp(LPCSTR base_name, PropItemVec& items, PropValue::TOnChange on_type_change)
 {                             
 #if 1
+
 	OnTypeChangeEvent	            = on_type_change;
     PropValue* P		            = PHelper().CreateToken32	(items, "Type",		(u32*)&type,		ttype_token);
     P->OnChangeEvent.bind           (this,&STextureParams::OnTypeChange);

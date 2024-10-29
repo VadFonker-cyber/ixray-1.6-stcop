@@ -6,15 +6,16 @@
 #pragma once
 
 #include "../../xrCore/xrCore.h"
-#include <io.h>
-#include <fcntl.h>
-#include <sys\stat.h>
+#include "xrDXT.h"
 
 #undef ENGINE_API
 #define ENGINE_API
 #define XR_EPROPS_API
 #define ECORE_API
 #define NVTT_SHARED 1
+
+#undef min
+#undef max
 
 #ifndef MAKEFOURCC
 #define MAKEFOURCC(ch0, ch1, ch2, ch3)                              \
