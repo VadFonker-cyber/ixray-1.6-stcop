@@ -30,8 +30,6 @@ float4 ScreenSpaceLocalReflections(float3 Point, float3 Reflect)
     float L = 0.025f, DeltaL = 0.0f;
 
     float Fade = saturate(dot(Reflect, normalize(Point)) * 4.0f);
-	
-	Reflect.xyz /= abs(Reflect.z) + 0.00001f;
 
     if (Fade < 0.001f)
     {
@@ -46,7 +44,7 @@ float4 ScreenSpaceLocalReflections(float3 Point, float3 Reflect)
         HitPos = gbuf_unpack_position(ReflUV);
         if (all(min(min(1.f - ReflUV.x, ReflUV.x), min(1.f - ReflUV.y, ReflUV.y))))
         {
-            L = abs(Point.z - HitPos.z);
+            L = length(Point - HitPos);
         }
         else
         {
