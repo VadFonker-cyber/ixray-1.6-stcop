@@ -59,6 +59,8 @@ public:
 	void DrawRootDir(size_t& HorBtnIter, const size_t& IterCount, xr_string& NextDir);
 	void DrawOtherDir(size_t& HorBtnIter, const size_t IterCount, xr_string& NextDir);
 
+	void ClearFileList();
+
 	void RescanISEDirectory(const xr_string& path);
 	void RescanDirectory();
 
@@ -129,7 +131,7 @@ private:
 	xr_string ISEPath;
 	string32 FindStr = {};
 
-	volatile xr_atomic_bool LockFiles = false;
+	volatile xr_atomic_bool NeedRescan = false;
 
 	float TextHeight = 0.f;
 

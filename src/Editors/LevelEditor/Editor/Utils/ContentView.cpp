@@ -26,15 +26,11 @@ void CContentView::Draw()
 	{
 		DrawHeader();
 
-		if (Files.empty() && !IsFindResult && !IsSpawnElement)
+		if ((NeedRescan || Files.empty()) && !IsFindResult && !IsSpawnElement)
 		{
 			RescanDirectory();
+			NeedRescan = false;
 		}
-
-		while (LockFiles)
-			continue;
-
-		LockFiles = true;
 
 		if (ImGui::BeginChild("##contentbrowserscroll"))
 		{
@@ -78,7 +74,6 @@ void CContentView::Draw()
 			CurrentItemHint.Active = false;
 		}
 
-		LockFiles = false;
 		ImGui::EndChild();
 	}
 
@@ -259,7 +254,7 @@ void CContentView::FindFile()
 			IsDelWatcher = true;
 			xr_delete(WatcherPtr);
 
-			Files.clear();
+			ClearFileList();
 			for (const auto& file : xr_dir_recursive_iter { CurrentDir.data() })
 			{
 				if (file.is_directory())
@@ -277,7 +272,7 @@ void CContentView::FindFile()
 		}
 		else if (IsSpawnElement)
 		{
-			Files.clear();
+			ClearFileList();
 
 			auto TempPath = ScanConfigs("");
 			ScanConfigsRecursive(TempPath, ParseStr);
@@ -287,7 +282,7 @@ void CContentView::FindFile()
 			IsDelWatcher = true;
 			xr_delete(WatcherPtr);
 
-			Files.clear();
+			ClearFileList();
 			for (const xr_dir_entry& file : xr_dir_recursive_iter { CurrentDir.data() })
 			{
 				if (file.is_directory())
@@ -341,7 +336,7 @@ void CContentView::DrawISEDir(size_t& HorBtnIter, const size_t IterCount)
 		{
 			IsSpawnElement = false;
 			ISEPath = "";
-			Files.clear();
+			ClearFileList();
 		}
 		else
 		{
@@ -400,7 +395,7 @@ void CContentView::DrawRootDir(size_t& HorBtnIter, const size_t& IterCount, xr_s
 			{
 				NextDir = NextDir.erase(NextDir.length() - 1);
 			}
-			Files.clear();
+			ClearFileList();
 		}
 
 		ImGui::EndDisabled();
@@ -425,7 +420,7 @@ void CContentView::DrawRootDir(size_t& HorBtnIter, const size_t& IterCount, xr_s
 
 void CContentView::RescanISEDirectory(const xr_string& StartPath)
 {
-	Files.clear();
+	ClearFileList();
 
 	if (!StartPath.empty() && StartPath != ISEPath)
 	{
@@ -472,7 +467,7 @@ void CContentView::DrawOtherDir(size_t& HorBtnIter, const size_t IterCount, xr_s
 		{
 			NextDir = RootDir;
 		}
-		Files.clear();
+		ClearFileList();
 	}
 
 	for (FileOptData FilePath : Files)
@@ -486,7 +481,7 @@ void CContentView::DrawOtherDir(size_t& HorBtnIter, const size_t IterCount, xr_s
 				{
 					NextDir = NextDir.erase(NextDir.length() - 1);
 				}
-				Files.clear();
+				ClearFileList();
 				break;
 			}
 		}
@@ -529,12 +524,17 @@ void CContentView::DrawOtherDir(size_t& HorBtnIter, const size_t IterCount, xr_s
 	}
 }
 
+void CContentView::ClearFileList()
+{
+	Files.clear();
+}
+
 void CContentView::RescanDirectory()
 {
 	IsDelWatcher = true;
 	xr_delete(WatcherPtr);
 
-	Files.clear();
+	ClearFileList();
 	for (const auto& file : xr_dir_iter{ CurrentDir.data() })
 	{
 		if (std::filesystem::is_directory(file))
@@ -555,21 +555,7 @@ void CContentView::RescanDirectory()
 		CurrentDir.data(),
 		[this](const std::string&, const filewatch::Event)
 		{
-			while (LockFiles || IsSpawnElement)
-			{
-				if (IsDelWatcher)
-				{
-					IsDelWatcher = false;
-					LockFiles = false;
-					return;
-				}
-
-				continue;
-			}
-
-			LockFiles = true;
-			Files.clear();
-			LockFiles = false;
+			NeedRescan = true;
 		}
 	);
 }
