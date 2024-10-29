@@ -378,6 +378,7 @@ void CRender::Calculate()
 #include "../../../Layers/xrRender/CHudInitializer.cpp"
 #include "../../../Layers/xrRender/dxEnvironmentRender.h"
 #include "../../../xrEngine/IGame_Level.h"
+#include "../../../xrCore/git_version.h"
 
 void CRender::Render()
 {
@@ -855,6 +856,44 @@ HRESULT	CRender::shader_compile(
 
 	HRESULT		_result = E_FAIL;
 
+	char extension[3];
+	strncpy_s(extension, pTarget, 2);
+
+	string_path file_name;
+	{
+		string_path file;
+		xr_strcpy(file, "shaders_cache\\");
+		xr_strcat(file, _VER);
+		xr_strcat(file, "\\editor\\");
+		xr_strcat(file, name);
+		xr_strcat(file, ".");
+		xr_strcat(file, extension);
+		xr_strcat(file, "\\");
+		xr_strcat(file, sh_name);
+		FS.update_path(file_name, "$app_data_root$", file);
+	}
+
+	u32 const RealCodeCRC = crc32(pSrcData, SrcDataLen);
+	if (FS.exist(file_name) && ps_r__common_flags.test(RFLAG_USE_CACHE)) {
+#ifdef DEBUG
+		Msg("compilied shader library found %s", file_name);
+#endif // DEBUG
+
+		IReader* file = FS.r_open(file_name);
+		if (file->length() > 4)
+		{
+			u32 ShaderCRC = file->r_u32();
+			u32 CodeSRC = file->r_u32();
+
+			if (RealCodeCRC == CodeSRC) {
+				u32 const real_crc = crc32(file->pointer(), file->elapsed());
+				if (real_crc == ShaderCRC) {
+					_result = create_shader(pTarget, (DWORD*)file->pointer(), file->elapsed(), file_name, result, false);
+				}
+			}
+		}
+		file->close();
+	}
 
 	if (FAILED(_result))
 	{
@@ -863,7 +902,7 @@ HRESULT	CRender::shader_compile(
 		LPD3DBLOB					pErrorBuf = nullptr;
 
 		_result = D3DCompile(pSrcData, SrcDataLen,
-			"",
+			"",//nullptr, //LPCSTR pFileName,	//	NVPerfHUD bug workaround.
 			defines, &Includer, pFunctionName,
 			pTarget,
 			Flags, 0,
@@ -871,13 +910,19 @@ HRESULT	CRender::shader_compile(
 			&pErrorBuf
 		);
 
-		if (SUCCEEDED(_result))
-		{
-
-			_result = create_shader(pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize(), name, result, false);
+		if (SUCCEEDED(_result)) {
+			if (ps_r__common_flags.test(RFLAG_USE_CACHE)) {
+				IWriter* file = FS.w_open(file_name);
+				u32 const crc = crc32(pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize());
+				file->w_u32(crc);
+				file->w_u32(RealCodeCRC);
+				file->w(pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize());
+				FS.w_close(file);
+			}
+			_result = create_shader(pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize(), file_name, result, false);
 		}
-		else
-		{
+		else {
+			Msg("! %s", file_name);
 			if (pErrorBuf)
 				Msg("! error: %s", (LPCSTR)pErrorBuf->GetBufferPointer());
 			else
